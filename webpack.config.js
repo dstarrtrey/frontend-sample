@@ -11,7 +11,7 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: "babel-loader"
         },
       },
       { // SASS/SCSS Modules
@@ -38,7 +38,7 @@ module.exports = {
       { // Normal SASS/SCSS files (excluding modules)
         // More for global styling
         test: /\.s(a|c)ss$/,
-        exclude: /\.module.(s(a|c)ss)$/,
+        exclude: /\.module.(s(a|c)ss)$/, //Already included above
         loader: [
           MiniCssExtractPlugin.loader,
           'css-loader',
@@ -50,10 +50,31 @@ module.exports = {
           },
         ],
       },
+      { // Uses url-loader to return link referencing the file unconditionally
+        test: /\.(gif|png|jpe?g)$/,
+        loader: 'url-loader',
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 1000,
+              fallback: {
+                loader: 'file-loader',
+                options: {
+                  name: '[sha512:hash:base64:7].[ext]',
+                },
+              }
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.scss'],
+    extensions: ['.js', '.jsx', '.scss', '.gif', '.png', '.jpg', '.jpeg', '.svg'],
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -61,4 +82,8 @@ module.exports = {
       chunkFilename: '[id].[hash].css',
     }),
   ],
+  output: {
+    filename: '[name].[contenthash].js',
+    path: path.resolve(__dirname, 'dist')
+  }
 };
