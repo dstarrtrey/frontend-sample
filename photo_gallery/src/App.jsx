@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { images } from './static/images.json';
 import PhotoGallery from './components/PhotoGallery';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
+
+const StyledHeading = styled.h1`
+  text-align: center;
+`;
 
 const GalleryGrid = styled.div`
+  width: 100vw;
   display: grid;
   grid-template-columns: 10% auto 10%;
   justify-items: center;
@@ -27,6 +32,7 @@ const Button = styled.div`
   &:hover{
     color: #6f6f6f;
   }
+  user-select: none;
 `;
 const Pics = styled.div`
   z-index: 0;
@@ -54,31 +60,33 @@ function App() {
   });
 
   const handleClick = (dir) => {
-    setTransition({
-      moving: true,
-      direction: dir,
-      transition: `left ${TRANSITION_LENGTH}ms ease-in-out`
-    });
-    setTimeout(function(){
-      if (dir === 'left') {
-        photoIndex > 0 
-          ? setPhotoIndex(photoIndex - 1)
-          : setPhotoIndex(images.length - 1); 
-      } else {
-        photoIndex !==  images.length - 1 
-          ? setPhotoIndex(photoIndex + 1)
-          : setPhotoIndex(0); 
-      }
+    if (transition.moving === false) {
       setTransition({
-        moving: false,
-        direction: 'left',
-        transition: `left 0ms ease-in-out`
+        moving: true,
+        direction: dir,
+        transition: `left ${TRANSITION_LENGTH}ms ease-in-out`
       });
-    }, TRANSITION_LENGTH)
+      setTimeout(function(){
+        if (dir === 'left') {
+          photoIndex > 0 
+            ? setPhotoIndex(photoIndex - 1)
+            : setPhotoIndex(images.length - 1); 
+        } else {
+          photoIndex !==  images.length - 1 
+            ? setPhotoIndex(photoIndex + 1)
+            : setPhotoIndex(0); 
+        }
+        setTransition({
+          moving: false,
+          direction: 'left',
+          transition: `left 0ms ease-in-out`
+        });
+      }, TRANSITION_LENGTH);
+    }
   };
 
   return<>
-    <h1>Photo Gallery</h1>
+    <StyledHeading>Photo Gallery</StyledHeading>
     <GalleryGrid>
       <ButtonContainer>
         <Button onClick={() => handleClick('left')}>-</Button>
