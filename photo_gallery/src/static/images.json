@@ -1,0 +1,24 @@
+{
+  "images": [
+    {
+      "image": "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      "caption": "THIS IS A SAMPLE CAPTION"
+    },
+    {
+      "image": "http://wowslider.com/sliders/demo-81/data1/images/redkite50498.jpg",
+      "caption": "THIS IS A DIFFERENT CAPTION"
+    },
+    {
+      "image": "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg",
+      "caption": "THIS IS YET ANOTHER CAPTION"
+    },
+    {
+      "image": "https://static.addtoany.com/images/dracaena-cinnabari.jpg",
+      "caption": "Look! A tree~"
+    },
+    {
+      "image": "https://cdn.pixabay.com/photo/2016/06/18/17/42/image-1465348_960_720.jpg",
+      "caption": "Hola"
+    }
+  ]
+}
