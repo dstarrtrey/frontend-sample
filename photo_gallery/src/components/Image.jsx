@@ -19,12 +19,15 @@ const Pic = styled.img`
 
 const Caption = styled.p`
   position: absolute;
-  font-size: 40px;
+  font-size: 5vh;
+  text-align: center;
   color: white;
-  height: 100%;
-  top: 50%;
+  width: 90%;
+  bottom: 0%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
+  user-select: none;
+  text-shadow: 2px 2px black;
 `;
 
 const Image = props => {
