@@ -1,4 +1,4 @@
-# David Starr's Webpack Config Sample
+# David Starr's Webpack Config Starter
 Repo demonstrating bundling, transpiling, and CSS preprocessing
 
 ## To Start
