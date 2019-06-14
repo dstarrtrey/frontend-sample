@@ -8,9 +8,10 @@ const ImageDiv = styled.div`
 `;
 
 const Pic = styled.img`
-  width: 100%;
+  width: auto;
   height: auto;
   max-height: 100%;
+  max-width: 100%;
   position: absolute;
   top: 50%;
   left: 50%;

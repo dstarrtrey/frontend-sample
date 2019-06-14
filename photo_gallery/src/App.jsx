@@ -17,6 +17,7 @@ const GalleryGrid = styled.div`
   align-items: center;
   overflow: hidden;
 `;
+
 const ButtonContainer = styled.div`
   z-index: 1;
   font-size: 50px;
@@ -43,6 +44,7 @@ const Button = styled.div`
   width: 60px;
   border-radius: 100%;
 `;
+
 const Pics = styled.div`
   z-index: 0;
   width: 100%;

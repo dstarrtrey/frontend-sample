@@ -102,7 +102,6 @@ class PhotoGallery extends React.Component {
       // Increases velocity and left from negative values
       const newVelocity = velocity + 10 * 0.033;
       let newLeft = left + newVelocity;
-      console.log('newVelocity', newVelocity, newLeft);
       if (newLeft < -800) {
         window.clearInterval(stoppingInterval);
         this.props.setIndex(next)
@@ -127,7 +126,6 @@ class PhotoGallery extends React.Component {
     } else if (!isTouched && left > 0.01) {
       const newVelocity = velocity - 10 * 0.033;
       let newLeft = left + newVelocity;
-      console.log('newVelocity', newVelocity, newLeft);
       if (newLeft > 800) {
         window.clearInterval(stoppingInterval);
         this.props.setIndex(prev)
@@ -170,7 +168,7 @@ class PhotoGallery extends React.Component {
     });
   };
   render() {
-    const { index, images } = this.props;
+    const { index, setIndex, images } = this.props;
 
     // Prev and next are rendered for a fluid swipe transition
     const prev = index === 0
@@ -180,7 +178,7 @@ class PhotoGallery extends React.Component {
       ? 0
       : index + 1;
 
-    return <><Gallery left={this.state.left}>
+    return <Gallery left={this.state.left}>
       <Prev>
         <Image src={images[prev].image} caption={images[prev].caption}/>
       </Prev>
@@ -207,9 +205,7 @@ class PhotoGallery extends React.Component {
         <Image src={images[next].image} caption={images[next].caption}/>
       </Next>
       
-    </Gallery>
-    <h1>{this.state.left}</h1>
-    </>;
+    </Gallery>;
   }
 };
 
