@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Image from './Image';
 import styled from 'styled-components';
 
@@ -15,7 +15,7 @@ const Gallery = styled.div.attrs(props => {
 
 const Prev = styled.div`
   position: absolute;
-  left: -100%;
+  left: -102%;
   top: 0;
   width: 100%;
   height: 60vh;
@@ -29,40 +29,42 @@ const Current = styled.div`
 
 const Next = styled.div`
   position: absolute;
-  left: 100%;
+  left: 102%;
   top: 0;
   width: 100%;
   height: 60vh;
 `;
 
-const PhotoGallery = props => {
-  const { index, setIndex, images } = props;
-  const [ left, setLeft ] = useState(0);
-  const [ isTouched, setIsTouched ] = useState(false);
-  const [ latestDrag, setLatestDrag ] = useState(0);
-  const [ velocity, setVelocity ] = useState(0);
-  const [ startX, setStartX ] = useState(0);
-  const [ lastX, setLastX ] = useState(0);
-  const [ originalOffset, setOriginalOffset ] = useState(0);
-  const [ width, setWidth ] = useState(0);
-  const [ stoppingInterval, setStoppingInterval ] = useState(null);
-
-  useEffect(() => {
-    setWidth(window.innerWidth);
-    window.addEventListener('resize', () => setWidth(window.innerWidth));
-  }, [])
-
-  const handleStart = startX => {
-    // Initializes a click/touch event
-    setIsTouched(true);
-    setLatestDrag(Date.now());
-    setStartX(startX);
-    setVelocity(0);
-    setOriginalOffset(left);
-    console.log(startX);
-  };
+class PhotoGallery extends React.Component {
+  state = {
+    left: 0,
+    isTouched: false,
+    latestDrag: 0,
+    velocity: 0,
+    startX: 0,
+    lastX: 0,
+    originalOffset: 0,
+    stoppingInterval: null,
+  }
   
-  const handleMove = moveX => {
+  handleStart = startX => {
+    // Initializes a click/touch event
+    const { stoppingInterval, left } = this.state;
+    if (stoppingInterval !== null) {
+      window.clearInterval(stoppingInterval);
+    }
+    this.setState({
+      isTouched: true,
+      latestDrag: Date.now(),
+      startX,
+      velocity: 0,
+      originalOffset: left,
+      stoppingInterval: null,
+    });
+  };
+    
+  handleMove = moveX => {
+    const { isTouched, latestDrag, lastX, startX, originalOffset } = this.state;
     if (isTouched) {
       const currentTime = Date.now();
       const elapsed = currentTime - latestDrag;
@@ -71,84 +73,144 @@ const PhotoGallery = props => {
       const totalChange = moveX - startX - originalOffset;
       
       // If the swipe is more than it's container's width, next!
-      if (totalChange < -(width * 0.8) || totalChange > (width * 0.8)) {
-
-      }
+      if (totalChange < -800) {
+        this.props.setIndex(this.props.index - 1);
+      } //else if (totalChange > 800) {
+      //   setIndex(index + 1);
+      // }
 
       // Updates all values upon moving
-      setLeft(totalChange);
-      setVelocity(newVelocity);
-      setLatestDrag(currentTime);
-      setLastX(moveX);
+      this.setState({
+        left: totalChange,
+        velocity: newVelocity,
+        latestDrag: currentTime,
+        lastX: moveX,
+      });
     }
   };
-
-  const handleEnd = event => {
-    console.log('velocity', velocity);
-    setStartX(0);
-    setIsTouched(false);
-    setStoppingInterval(window.setInterval(slidingAnimation, 33));    
-  };
-
-  const slidingAnimation = () => {
+  
+  slidingAnimation = () => {
+    const { left, isTouched, stoppingInterval, velocity } = this.state;
+    const { index, images } = this.props;
+    const prev = index === 0
+      ? images.length - 1
+      : index - 1;
+    const next = index === images.length - 1
+      ? 0
+      : index + 1;
     if (!isTouched && left < -0.01) {
-      // Inclreases velocity and left from negative values
+      // Increases velocity and left from negative values
       const newVelocity = velocity + 10 * 0.033;
-      const newLeft = left + newVelocity;
-      if (newLeft < -(width * 0.8)) {
+      let newLeft = left + newVelocity;
+      console.log('newVelocity', newVelocity, newLeft);
+      if (newLeft < -800) {
         window.clearInterval(stoppingInterval);
-        console.log('completed:', newLeft)
-        // Next!
+        this.props.setIndex(next)
+        newLeft = 0;
+        this.setState({
+          left: 0
+        });
+      } else if (newLeft > -5 && newLeft < 100) {
+        window.clearInterval(stoppingInterval);
+        this.setState({
+          left: 0,
+          velocity: 0,
+          stoppingInterval: null,
+          originalOffset: 0,
+        });
+      } else {
+        this.setState({
+          left: newLeft,
+          velocity: newVelocity,
+        })
       }
-      setVelocity(newVelocity);
-      setLeft(newLeft);
     } else if (!isTouched && left > 0.01) {
       const newVelocity = velocity - 10 * 0.033;
-      const newLeft = left - newVelocity;
-      if (newLeft > (width * 0.8)) {
+      let newLeft = left + newVelocity;
+      console.log('newVelocity', newVelocity, newLeft);
+      if (newLeft > 800) {
         window.clearInterval(stoppingInterval);
-        console.log('completed:', newLeft)
-        // Next!
+        this.props.setIndex(prev)
+        newLeft = 0;
+        this.setState({
+          left: 0
+        });
+      } else if (newLeft > -100 && newLeft < 5) {
+        window.clearInterval(stoppingInterval);
+        this.setState({
+          left: 0,
+          velocity: 0,
+          stoppingInterval: null,
+          originalOffset: 0,
+        });
+      } else {
+        this.setState({
+          left: newLeft,
+          velocity: newVelocity,
+        })
       }
-      setVelocity(newVelocity);
-      setLeft(newLeft);
     }else if (!isTouched) {
       // Once the animation is done, resets all
       window.clearInterval(stoppingInterval);
-      setLeft(0);
-      setVelocity(0);
-      setStoppingInterval(null);
-      setOriginalOffset(0);
+      this.setState({
+        left: 0,
+        velocity: 0,
+        stoppingInterval: null,
+        originalOffset: 0,
+      });
     }
   };
 
-  // Prev and next are rendered for a fluid swipe transition
-  const prev = index === 0
-    ? images.length - 1
-    : index - 1;
-  const next = index === images.length - 1
-    ? 0
-    : index + 1;
+  handleEnd = () => {
+    console.log('Handling End');
+    this.setState({
+      startX: 0,
+      isTouched: false,
+      stoppingInterval: window.setInterval(this.slidingAnimation.bind(this), 33)
+    });
+  };
+  render() {
+    const { index, setIndex, images } = this.props;
 
-  return <Gallery left={left}>
-    <Prev>
-      <Image src={images[prev].image} caption={images[prev].caption}/>
-    </Prev>
-    <Current
-      onTouchStart={touchEvent => handleStart(touchEvent.targetTouches[0].clientX)}
-      onMouseDown={mouseEvent => handleStart(mouseEvent.clientX)}
-      onTouchMove={touchEvent => handleMove(touchEvent.targetTouches[0].clientX)}
-      onMouseMove={mouseEvent => handleMove(mouseEvent.clientX)}
-      onTouchEnd={() => handleEnd()}
-      onMouseUp={() => handleEnd()}
-      onMouseLeave={() => handleEnd()}
-    >
-      <Image src={images[index].image} caption={images[index].caption}/>
-    </Current>
-    <Next>
-      <Image src={images[next].image} caption={images[next].caption}/>
-    </Next>
-  </Gallery>;
+    // Prev and next are rendered for a fluid swipe transition
+    const prev = index === 0
+      ? images.length - 1
+      : index - 1;
+    const next = index === images.length - 1
+      ? 0
+      : index + 1;
+
+    return <><Gallery left={this.state.left}>
+      <Prev>
+        <Image src={images[prev].image} caption={images[prev].caption}/>
+      </Prev>
+      <div
+        onTouchStart={touchEvent => {
+          touchEvent.preventDefault();
+          this.handleStart(touchEvent.targetTouches[0].clientX)
+        }}
+        onMouseDown={mouseEvent => {
+          mouseEvent.preventDefault();
+          this.handleStart(mouseEvent.clientX)
+        }}
+        onTouchMove={touchEvent => this.handleMove(touchEvent.targetTouches[0].clientX)}
+        onMouseMove={mouseEvent => this.handleMove(mouseEvent.clientX)}
+        onTouchEnd={() => this.handleEnd()}
+        onMouseUp={() => this.handleEnd()}
+        onMouseLeave={() => this.handleEnd()}
+      >
+        <Current>
+          <Image src={images[index].image} caption={images[index].caption}/>
+        </Current>
+      </div>
+      <Next>
+        <Image src={images[next].image} caption={images[next].caption}/>
+      </Next>
+      
+    </Gallery>
+    <h1>{this.state.left}</h1>
+    </>;
+  }
 };
 
 export default PhotoGallery;

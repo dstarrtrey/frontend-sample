@@ -8,7 +8,7 @@ const StyledHeading = styled.h1`
 `;
 
 const GalleryGrid = styled.div`
-  width: 100vw;
+  width: 1000px;
   display: grid;
   grid-template-columns: 10% auto 10%;
   justify-items: center;
