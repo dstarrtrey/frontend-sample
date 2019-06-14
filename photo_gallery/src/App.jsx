@@ -8,6 +8,8 @@ const StyledHeading = styled.h1`
 `;
 
 const GalleryGrid = styled.div`
+  text-align: center;
+  margin: auto;
   width: 1000px;
   display: grid;
   grid-template-columns: 10% auto 10%;
@@ -18,6 +20,7 @@ const GalleryGrid = styled.div`
 const ButtonContainer = styled.div`
   z-index: 1;
   font-size: 50px;
+  line-height: 47px;
   height: 101%;
   width: 100%;
   background-color: white;
@@ -28,11 +31,17 @@ const ButtonContainer = styled.div`
 
 const Button = styled.div`
   cursor: pointer;
-  transition: .5s color linear;
+  transition: .1s all linear;
   &:hover{
     color: #6f6f6f;
+    background-color: #0b0b0b;
   }
   user-select: none;
+  border: 2px solid black;
+  text-align: center;
+  height: 60px;
+  width: 60px;
+  border-radius: 100%;
 `;
 const Pics = styled.div`
   z-index: 0;
@@ -85,7 +94,7 @@ function App() {
     }
   };
 
-  return<>
+  return <>
     <StyledHeading>Photo Gallery</StyledHeading>
     <GalleryGrid>
       <ButtonContainer>

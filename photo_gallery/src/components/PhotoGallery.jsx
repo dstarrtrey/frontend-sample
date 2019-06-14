@@ -149,7 +149,7 @@ class PhotoGallery extends React.Component {
           velocity: newVelocity,
         })
       }
-    }else if (!isTouched) {
+    } else if (!isTouched) {
       // Once the animation is done, resets all
       window.clearInterval(stoppingInterval);
       this.setState({
@@ -170,7 +170,7 @@ class PhotoGallery extends React.Component {
     });
   };
   render() {
-    const { index, setIndex, images } = this.props;
+    const { index, images } = this.props;
 
     // Prev and next are rendered for a fluid swipe transition
     const prev = index === 0
