@@ -18,4 +18,4 @@ Features swipe, click and drag, onClick transitions
 - After your `npm install`, run `npm start` and open your browser to [localhost:3000] so long as your terminal does not say otherwise.  
 - Test the swipe, click and drag, and buttons with mouse or touch.
 
-** Thank you for taking the time to view my project! **
+**Thank you for taking the time to view my project!**
